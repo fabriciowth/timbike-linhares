@@ -78,12 +78,23 @@ nav.stuck{border-color:#e0e4d8}
 .nav-cta{margin-left:24px}
 @media(max-width:900px){.nav-links{display:none}.nav-cta{margin-left:auto}}
 
-/* ---------- hero ---------- */
-.hero{padding-top:56px;padding-bottom:80px;text-align:center;overflow:hidden}
-.hero h1{margin:20px auto 0;max-width:14ch}
-.hero .lead{margin:24px auto 0;text-align:center}
+/* ---------- hero com vídeo ---------- */
+.hero{position:relative;isolation:isolate;min-height:min(78vh,720px);display:flex;align-items:center;
+  text-align:center;padding:96px 0;overflow:hidden;background:#0d1410;color:#fff}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+/* scrim: o frame é céu claro, precisa de peso para o texto branco passar no contraste */
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(8,14,10,.72),rgba(8,14,10,.55) 45%,rgba(8,14,10,.82))}
+.hero .eyebrow{color:#fff}
+.hero h1{margin:20px auto 0;max-width:14ch;color:#fff}
+.hero .lead{margin:24px auto 0;text-align:center;color:#e8ece6}
+.hero .hl{color:var(--lime-fill)}
 .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:36px}
-.parade{display:flex;gap:24px;margin-top:56px;padding-left:24px;width:max-content;animation:parade 44s linear infinite}
+.hero .btn-dark{background:#fff;color:#000}
+
+/* ---------- desfile de bikes (fora do hero, sobre o cream) ---------- */
+.parade-strip{padding:64px 0}
+.parade{display:flex;gap:24px;padding-left:24px;width:max-content;animation:parade 44s linear infinite}
 .parade:hover{animation-play-state:paused}
 @keyframes parade{to{transform:translateX(-50%)}}
 .parade-mask{overflow:hidden;position:relative}
@@ -227,6 +238,9 @@ footer nav{position:static;background:none;margin-left:auto;display:flex;gap:20p
 
 <!-- ============ HERO ============ -->
 <header class="hero" id="topo">
+  <video autoplay muted loop playsinline preload="metadata" poster="hero-poster.jpg" aria-hidden="true">
+    <source src="hero.mp4" type="video/mp4">
+  </video>
   <div class="wrap">
     <p class="eyebrow rise">Bicicletas para lazer e esporte · desde o primeiro pedal</p>
     <h1 class="rise">Uma bike certa para <span class="hl">cada</span> caminho.</h1>
@@ -240,6 +254,9 @@ footer nav{position:static;background:none;margin-left:auto;display:flex;gap:20p
     </div>
   </div>
 
+</header>
+
+<div class="parade-strip">
   <div class="parade-mask">
     <div class="parade" id="parade">
       <figure class="pcard"><div class="num">01 — Speed</div><img loading="lazy" src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&q=80" alt="Bicicleta speed prateada"></figure>
@@ -250,7 +267,8 @@ footer nav{position:static;background:none;margin-left:auto;display:flex;gap:20p
       <figure class="pcard"><div class="num">06 — MTB</div><img loading="lazy" src="https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=800&q=80" alt="Mountain bike em trilha"></figure>
     </div>
   </div>
-</header>
+</div>
+
 
 <!-- ============ FAIXA MARCAS ============ -->
 <div class="brands">
@@ -595,6 +613,12 @@ function count(el){
     el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))).toLocaleString('pt-BR') + suffix;
     if (p < 1) requestAnimationFrame(step);
   })(t0);
+}
+
+// quem pediu menos movimento fica só com o poster
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const v = document.querySelector('.hero video');
+  if (v) { v.removeAttribute('autoplay'); v.pause(); }
 }
 
 // borda da nav ao rolar
